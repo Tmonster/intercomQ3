@@ -1,0 +1,12 @@
+{
+  "name": "intercom3",
+  "version": "3.10.8",
+  "description": "calendar widget",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Tom Ebergen",
+  "license": "ISC"
+}
