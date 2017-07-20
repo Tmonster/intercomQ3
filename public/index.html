@@ -1,0 +1,139 @@
+<!doctype html>
+
+<!-- ASSIGN OUR ANGULAR MODULE -->
+<html ng-app="eventCalendar">
+<head>
+	<!-- META -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1"><!-- Optimize mobile viewport -->
+
+	<title>Node/Angular Todo App</title>
+
+	<!-- SCROLLS -->
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"><!-- load bootstrap -->
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+	<style>
+		html 					{ overflow-y:scroll; }
+		body 					{ padding-top:50px; }
+		#todo-list { 
+			margin-bottom:30px;
+			text-align: center;
+		}
+		#todo-form { 
+			margin-bottom:50px; 
+		}
+		#todo-add {
+			width:100%;
+		}
+		.square {
+			width: 250px;
+			height: 250px;
+			overflow-y: scroll;
+			border-style: solid;
+			border-color: aqua;
+			border-width: 3px;
+			border-radius: 20px;
+			display: inline-block;
+			margin: 20px;
+		}
+		#todo-list input[type="checkbox"] {
+			float: none;
+		}
+		.calendar{
+			margin: auto;
+			text-align: center;
+			display: flex;
+			flex-wrap: wrap;
+		}
+		.text-center {
+			text-align: center;
+			background: #c5c4c4;
+			width: 80%;
+			margin: 5px auto;
+			border-radius: 20px;
+			padding: 0px 5px;
+		}
+		.newEvent {
+			text-align: center;
+			width: 80%;
+			margin: 5px auto;
+			padding: 0px 5px;
+		}
+		.jumbotron.min {
+			width: 65%;
+			margin: auto 10px;
+		}
+		.heading {
+			display: flex;
+		}
+		.form-group.square {
+			margin: auto 10px;
+			text-align: center;
+		}
+		.form-group.square input[type="date"]{
+			width:155px;
+		}
+		.square-bottom{
+			margin-top: 10px;
+		}
+	</style>
+
+	<!-- SPELLS -->
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script><!-- load angular -->
+
+	
+	<script src="js/core.js"></script> <!-- load our main application -->
+	<script src="js/controllers/main.js"></script> <!-- load up our controller -->
+	<script src="js/services/events.js"></script> <!-- load our todo service -->
+</head>
+<!-- SET THE CONTROLLER -->
+<body ng-controller="eventController">
+	<div class="container">
+		<div class="heading">
+			<div class="jumbotron min">
+					<h1 style="display: flex;"><span class="label label-info" style="margin: auto 5px">{{ events.length }}</span> Calendar Events!</h1>
+			</div>
+			<div class="form-group square">
+				<form>
+					<input type="text" class="newEvent" placeholder="ocassion" ng-model="formData.occasion"> 
+					<br>
+					<input type="text" class="newEvent" placeholder="invited Count" ng-model="formData.invitedCount"> 
+					<br>
+					date: <input type="date" class="newEvent" placeholder="Event Date" ng-model="formData.eventDate">
+					<br>
+					<div style="display:flex">
+						<div style="width:50%; text-align:right; margin-right: 5px">
+							Going?
+						</div>
+						<div style="width:50%; text-align: left; margin-left: 5px">
+						 <input type="radio" name="going" value="Going" checked>
+						</div>
+					</div>
+					<div style="display:flex">
+						<div style="width:50%; text-align:right; margin-right: 5px">
+							Not Going?
+						</div>
+						<div style="width:50%; text-align: left; margin-left: 5px">
+						 <input type="radio" name="going" value="Not Going">
+						</div>
+					</div>
+					<br>
+					<button type="submit" class="btn btn-primary btn-lg" ng-click="createEvent()">Add Event</button>
+				</form>
+			</div>
+		</div>
+		<div class="calendar">
+			<div class="square" ng-repeat="event in events">
+				<p class="text-center">occasion: {{event.occasion}}</p>
+				<p class="text-center">invited: {{event.invited_count}}</p>
+				<p class="text-center">Date: {{event.month}}/{{event.day}}/{{event.year}}</p>
+				<p class="text-center">Cancelled: {{event.cancelled ? 'Yes' : 'No'}}</p>
+				<form>
+				<div class="square-bottom">
+					<button type="submit" class="btn btn-primary btn-lg">Delete Event</button>
+				</div>
+				</form>
+			</div>
+	</div>
+</body>
+</html>

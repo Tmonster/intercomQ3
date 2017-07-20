@@ -8,5 +8,11 @@
     "start": "node server.js"
   },
   "author": "Tom Ebergen",
+  "dependencies": {
+      "body-parser": "^1.4.3",
+      "express": "^4.13.3",
+      "morgan": "^1.1.1",
+      "nodemon": "^1.11.0"
+  },
   "license": "ISC"
 }
