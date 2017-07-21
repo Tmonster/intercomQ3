@@ -10,7 +10,7 @@ npm -v
 
 Then run the following
 ```
-git clone 
+git clone https://github.com/Tmonster/intercomQ3.git
 npm install
 npm start
 ```
