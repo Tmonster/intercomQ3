@@ -16,3 +16,10 @@ npm start
 ```
 
 and the the calendar app should be running locally at http://localhost:8080
+
+## Improvements
+There's a lot of room for improvement on this app. I'm still new to node and angular, but this project really helped me get the hang of it. Here are some improvements I would make
+
+1. Run server side validation on new event inputs. Right now you should be able to enter just any random string into ocassion and going input fields
+2. Better error handling would go along with the validation of the inputs. Callback functions still rack my brain a bit, so I need to get better at using those.
+3. Better structure on how the events are displayed. It's not too bad right now with only future events being shown, but I think it should be easier to see events closer to the current date.
