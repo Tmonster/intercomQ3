@@ -8,11 +8,11 @@ function readEvents(callback) {
             callback(err, data);
         }
         var events = JSON.parse(data).events;
-        events.sort(function(a, b){
-            var datea = new Date(a.year, a.month, a.day);
-            var dateb = new Date(b.year, b.month, b.day);
-            return (datea.getTime() - dateb.getTime());
-        });
+        // events.sort(function(a, b){
+        //     var datea = new Date(a.year, a.month, a.day);
+        //     var dateb = new Date(b.year, b.month, b.day);
+        //     return (datea.getTime() - dateb.getTime());
+        // });
         callback(err, events);
     });
 };
@@ -26,9 +26,9 @@ function getEvents(res) {
             // months are 0-11 in javascript
             // we want todays events to also be in the "future events" category
             // so we add 1 day to it to make sure it's added.
-            console.log(data[i].year);
-            console.log(data[i].month-1);
-            console.log(data[i].day+1);
+            // console.log(data[i].year);
+            // console.log(data[i].month-1);
+            // console.log(data[i].day+1);
             var eventDate = new Date(data[i].year, data[i].month-1, data[i].day+1);
             if (eventDate.getTime() < today.getTime()) {
                 pastevents.push(data[i]);
@@ -40,9 +40,47 @@ function getEvents(res) {
             "pastevents" : pastevents,
             "futureevents" : futureevents
         };
-        console.log(data);
         res.json(data);
     });
+}
+
+function insertAt(events, newEventDate) {
+    var minIndex = 0;
+    var maxIndex = events.length-1;
+    var currentIndex = parseInt((minIndex + maxIndex)/2);
+    var currentElement = events[currentIndex];
+
+    while (minIndex <= maxIndex) {
+        var currentElementDate = new Date(currentElement.year, 
+                                          currentElement.month-1, 
+                                          currentElement.day-1);
+        if (currentIndex === events.length-1) {
+            if (currentElementDate.getTime() <= newEventDate.getTime()) {
+                return events.length;
+            }
+        }
+        if (currentIndex === 0) {
+            if (currentElementDate.getTime() >= newEventDate.getTime()) {
+                return 0;
+            }
+        }
+
+        var nextElementDate = new Date(events[currentIndex+1].year, 
+                                       events[currentIndex+1].month-1, 
+                                       events[currentIndex+1].day-1);
+        if(currentElementDate.getTime() >= newEventDate.getTime()) {
+            maxIndex = currentIndex;
+            currentIndex = parseInt((minIndex + maxIndex)/2)
+            currentElement = events[currentIndex];
+        } else if(nextElementDate.getTime() < newEventDate.getTime()) {
+            minIndex = currentIndex+1;
+            currentIndex = parseInt((minIndex + maxIndex)/2);
+            currentElement = events[currentIndex]; 
+        } else {
+            return currentIndex;
+        }
+    }
+    return currentIndex;
 }
 
 function createEvent(req, res, callback) {
@@ -53,7 +91,7 @@ function createEvent(req, res, callback) {
     var eventYear = date.getFullYear();
     // getMonth returns month number from 0-11
     var eventMonth = date.getMonth()+1;
-    var eventday = date.getDate();
+    var eventday = date.getDate()+1;
     var cancelled = (req.body.cancelled == 'true');
     var newEvent = {
         "occasion": ocassion,
@@ -67,12 +105,15 @@ function createEvent(req, res, callback) {
         if(err) {
             console.log(err);
         }
-        var events = data;     
-        events.push(newEvent);
+        var events = data; 
+        // insert the new event in order to 
+        // avoid sorting when reading events later
+        var insertIndex = insertAt(events, new Date(eventYear, eventMonth-1, eventday-1));
+        console.log("insert Index = " + parseInt(insertIndex));
+        events.splice(insertIndex, 0, newEvent);
         newCalendar = {
             "events" : events
         };
-        console.log(JSON.stringify(newCalendar));
         fs.writeFile('calendar.json', JSON.stringify(newCalendar), (err) => {
             if (err) throw err;
             callback(req, res); 

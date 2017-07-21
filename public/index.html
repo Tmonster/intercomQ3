@@ -124,7 +124,8 @@
 					<button id="showEvents" type="submit" class="btn btn-primary btn-lg" ng-click="showPastEvents()">Show <br>Previous Events</button>
 				</form>
 			</div>
-			<div class="square past-events" ng-repeat="event in pastevents" style="display: none">
+			<div class="square past-events" ng-repeat="event in pastevents" 
+			style="display: {{pastEventDisplay}}">
 				<p class="text-center">occasion: {{event.occasion}}</p>
 				<p class="text-center">invited: {{event.invited_count}}</p>
 				<p class="text-center">Date: {{event.month}}/{{event.day}}/{{event.year}}</p>
