@@ -7,7 +7,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1"><!-- Optimize mobile viewport -->
 
-	<title>Node/Angular Todo App</title>
+	<title>Calendar App</title>
 
 	<!-- SCROLLS -->
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"><!-- load bootstrap -->
@@ -65,6 +65,7 @@
 		}
 		.heading {
 			display: flex;
+			min-width: 700px;
 		}
 		.form-group.square {
 			margin: auto 10px;
@@ -75,6 +76,12 @@
 		}
 		.square-bottom{
 			margin-top: 10px;
+		}
+		.square.no-border {
+			border-style: none;
+		}
+		#showEvents {
+			margin-top: 90px;
 		}
 	</style>
 
@@ -91,7 +98,7 @@
 	<div class="container">
 		<div class="heading">
 			<div class="jumbotron min">
-					<h1 style="display: flex;"><span class="label label-info" style="margin: auto 5px">{{ events.length }}</span> Calendar Events!</h1>
+					<h1 style="display: flex;"><span class="label label-info" style="margin: auto 5px">{{ displayedEvents }}</span> Calendar Events!</h1>
 			</div>
 			<div class="form-group square">
 				<form>
@@ -101,21 +108,10 @@
 					<br>
 					date: <input type="date" class="newEvent" placeholder="Event Date" ng-model="formData.eventDate">
 					<br>
-					<div style="display:flex">
-						<div style="width:50%; text-align:right; margin-right: 5px">
-							Going?
-						</div>
-						<div style="width:50%; text-align: left; margin-left: 5px">
-						 <input type="radio" name="going" value="Going" checked>
-						</div>
-					</div>
-					<div style="display:flex">
-						<div style="width:50%; text-align:right; margin-right: 5px">
-							Not Going?
-						</div>
-						<div style="width:50%; text-align: left; margin-left: 5px">
-						 <input type="radio" name="going" value="Not Going">
-						</div>
+					<div style="width:100%; margin-right: 5px">
+						<p style="display: inline">Event Cancelled? 
+						<input type="checkbox" name="cancelled" class="newEvent" ng-model="formData.cancelled" value="true" style="width: inherit;"></p>
+					 	
 					</div>
 					<br>
 					<button type="submit" class="btn btn-primary btn-lg" ng-click="createEvent()">Add Event</button>
@@ -123,6 +119,22 @@
 			</div>
 		</div>
 		<div class="calendar">
+			<div class="square no-border">
+				<form>
+					<button id="showEvents" type="submit" class="btn btn-primary btn-lg" ng-click="showPastEvents()">Show <br>Previous Events</button>
+				</form>
+			</div>
+			<div class="square past-events" ng-repeat="event in pastevents" style="display: none">
+				<p class="text-center">occasion: {{event.occasion}}</p>
+				<p class="text-center">invited: {{event.invited_count}}</p>
+				<p class="text-center">Date: {{event.month}}/{{event.day}}/{{event.year}}</p>
+				<p class="text-center">Cancelled: {{event.cancelled ? 'Yes' : 'No'}}</p>
+				<form>
+				<div class="square-bottom">
+					<button type="submit" class="btn btn-primary btn-lg" ng-click="deleteEvent(event.occasion)">Delete Event</button>
+				</div>
+				</form>
+			</div>
 			<div class="square" ng-repeat="event in events">
 				<p class="text-center">occasion: {{event.occasion}}</p>
 				<p class="text-center">invited: {{event.invited_count}}</p>
@@ -130,7 +142,7 @@
 				<p class="text-center">Cancelled: {{event.cancelled ? 'Yes' : 'No'}}</p>
 				<form>
 				<div class="square-bottom">
-					<button type="submit" class="btn btn-primary btn-lg">Delete Event</button>
+					<button type="submit" class="btn btn-primary btn-lg" ng-click="deleteEvent(event.occasion)">Delete Event</button>
 				</div>
 				</form>
 			</div>

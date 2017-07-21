@@ -1,11 +1,11 @@
 fs = require('fs');
 
-function getEvents(res) {
+// read events from the calendar.json file
+function readEvents(callback) {
     // find the file with the json of events and return it
     fs.readFile('calendar.json', 'utf8', function(err, data){
         if(err) {
-            console.log("heellooo");
-            res.send(err);
+            callback(err, data);
         }
         var events = JSON.parse(data).events;
         events.sort(function(a, b){
@@ -13,33 +13,48 @@ function getEvents(res) {
             var dateb = new Date(b.year, b.month, b.day);
             return (datea.getTime() - dateb.getTime());
         });
-        res.json(events);
+        callback(err, events);
     });
 };
 
-// function deleteEvent(occasion) {
-//     var events = getEvents(res);
-//     var updatedevents;
-//     for (var event in events["events"]){
-//         if (event["occasion"] != occasion) {
-//             updatedevents.push(event);
-//         }
-//     }
-//     fs.writeFile('calendar.json', updatedevents, (err) => {
-//         if (err) res.send(err);
-//         res.json("success");
-//     });
-// }
+function getEvents(res) {
+    readEvents(function(err, data){
+        var today = new Date;
+        var pastevents = [];
+        var futureevents = [];
+        for (var i = 0; i < data.length; i++) {
+            // months are 0-11 in javascript
+            // we want todays events to also be in the "future events" category
+            // so we add 1 day to it to make sure it's added.
+            console.log(data[i].year);
+            console.log(data[i].month-1);
+            console.log(data[i].day+1);
+            var eventDate = new Date(data[i].year, data[i].month-1, data[i].day+1);
+            if (eventDate.getTime() < today.getTime()) {
+                pastevents.push(data[i]);
+            } else {
+                futureevents.push(data[i])
+            }
+        }
+        data = {
+            "pastevents" : pastevents,
+            "futureevents" : futureevents
+        };
+        console.log(data);
+        res.json(data);
+    });
+}
 
 function createEvent(req, res, callback) {
     // req.body.ocassion
-    // req.body.invitedCount blah blah blah
-    var ocassion = 'test new ocassion';
-    var invitedCount = '340';
-    var eventYear = '2017';
-    var eventMonth = '8';
-    var eventday = '20';
-    var cancelled = false;
+    var ocassion = req.body.occasion;
+    var invitedCount = req.body.invitedCount;
+    var date = new Date(req.body.eventDate);
+    var eventYear = date.getFullYear();
+    // getMonth returns month number from 0-11
+    var eventMonth = date.getMonth()+1;
+    var eventday = date.getDate();
+    var cancelled = (req.body.cancelled == 'true');
     var newEvent = {
         "occasion": ocassion,
         "invited_count": invitedCount,
@@ -48,19 +63,14 @@ function createEvent(req, res, callback) {
         "day" : eventday,
         "cancelled" : cancelled
     };
-    fs.readFile('calendar.json', function(err, data){
+    readEvents(function(err, data){
         if(err) {
             console.log(err);
-            res.send(err);
         }
-        var events = (JSON.parse(data)).events;
-        var updatedevents = [];
-        for (var i = 0 ; i < events.length ; i++){
-            updatedevents.push(events[i]);
-        }
-        updatedevents.push(newEvent);
+        var events = data;     
+        events.push(newEvent);
         newCalendar = {
-            "events" : updatedevents
+            "events" : events
         };
         console.log(JSON.stringify(newCalendar));
         fs.writeFile('calendar.json', JSON.stringify(newCalendar), (err) => {
@@ -68,8 +78,30 @@ function createEvent(req, res, callback) {
             callback(req, res); 
         });
     });
-    
 }
+
+function deleteEvent(req, res, callback) {
+    readEvents(function(err, data){
+        var occasion = req.params.occasion;
+        if(err) {
+            res.send(err);
+        }
+        var events = data;
+        var index = events.findIndex((event) => {
+            return (event.occasion === occasion);
+        });
+        events = events.slice(0, index).concat(events.slice(index+1, events.length));
+        newCalendar = {
+            "events" : events
+        };
+        fs.writeFile('calendar.json', JSON.stringify(newCalendar), (err) => {
+            if (err) {
+                res.send(err);
+            }
+            callback(req, res); 
+        });
+    });
+};
 
 module.exports = function (app) {
     // api ---------------------------------------------------------------------
@@ -80,18 +112,18 @@ module.exports = function (app) {
     });
 
     // create todo and send back all todos after creation
-    app.post('/api/todos', function (req, res) {
-        // create a todo, information comes from AJAX request from Angular
+    app.post('/api/events', function (req, res) {
         createEvent(req, res, function(req, res){
            getEvents(res); 
         });
     });
 
     // // delete a todo
-    // app.delete('/api/todos/:todo_id', function (req, res) {
-    //     deleteEvent();
-    //     getEvents(res);
-    // });
+    app.delete('/api/events/:occasion', function (req, res) {
+        deleteEvent(req, res, function(req, res){
+            getEvents(res);
+        });
+    });
 
     // application -------------------------------------------------------------
     app.get('*', function (req, res) {

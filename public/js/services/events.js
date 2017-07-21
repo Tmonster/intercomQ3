@@ -7,12 +7,11 @@ angular.module('eventService', [])
 			get : function() {
 				return $http.get('/api/events');
 			},
-			create : function(todoData) {
-				console.log("called create");
-				return $http.post('/api/todos', todoData);
+			create : function(eventData) {
+				return $http.post('/api/events', eventData);
+			},
+			delete : function(occasion) {
+				return $http.delete('/api/events/' + occasion);
 			}
-			// delete : function(id) {
-			// 	return $http.delete('/api/todos/' + id);
-			// }
 		}
 	}]);
