@@ -25,5 +25,6 @@ There's a lot of room for improvement on this app. I'm still new to node and ang
 3. Better structure on how the events are displayed. It's not too bad right now with only future events being shown, but I think it should be easier to see events closer to the current date.
 4. Separate CSS and HTML in index.html and remove any inline style rules from HTML elements
 5. Implement a better read write function. Right now all events are being read and written when a new event is created/deleted.
-6. Make the web-page more mobile-friendly?
+6. Add unique ID's to the calendar events. I wasn't sure what liberties I could take with changing the json fields. Looking back at it now though, I'm sure that would not have been a problem. 
+7. Make the web-page more mobile-friendly?
 
