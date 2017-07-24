@@ -1,6 +1,6 @@
 angular.module('eventController', [])
 
-	// inject the Todo service factory into our controller
+	// inject the Event service factory into our controller
 	.controller('eventController', ['$scope','$http','Events', function($scope, $http, Events) {
 		$scope.formData = {};
 		$scope.allDatesShown = false;
@@ -23,9 +23,7 @@ angular.module('eventController', [])
 			// if form is empty, nothing will happen
 
 			if ($scope.formData.occasion != undefined) {
-				// call the create function from our service (returns a promise object)
 				Events.create($scope.formData)
-					// if successful creation, call our get function to get all the new events
 					.success(function(data) {
 						$scope.formData = {}; // clear the form so our user is ready to enter another
 						$scope.events = data.futureevents;
@@ -52,15 +50,15 @@ angular.module('eventController', [])
 
 		$scope.showPastEvents = function() {
 			if (!$scope.allDatesShown) {
-				var pastevents = document.getElementsByClassName('past-events');
 				$scope.pastEventDisplay = 'inline-block';
 				document.getElementById('showEvents').innerHTML = "Show only future Events";
 				$scope.displayedEvents = $scope.events.length + $scope.pastevents.length;
+				$scope.allDatesShown = true;
 			} else {
-				var pastevents = document.getElementsByClassName('past-events');
 				$scope.pastEventDisplay = 'none';
 				document.getElementById('showEvents').innerHTML = "Show Previous Events";
 				$scope.displayedEvents = $scope.events.length;
+				$scope.allDatesShown = false;
 			}
 		};
 

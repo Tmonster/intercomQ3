@@ -2,17 +2,11 @@ fs = require('fs');
 
 // read events from the calendar.json file
 function readEvents(callback) {
-    // find the file with the json of events and return it
     fs.readFile('calendar.json', 'utf8', function(err, data){
         if(err) {
             callback(err, data);
         }
         var events = JSON.parse(data).events;
-        // events.sort(function(a, b){
-        //     var datea = new Date(a.year, a.month, a.day);
-        //     var dateb = new Date(b.year, b.month, b.day);
-        //     return (datea.getTime() - dateb.getTime());
-        // });
         callback(err, events);
     });
 };
@@ -23,12 +17,10 @@ function getEvents(res) {
         var pastevents = [];
         var futureevents = [];
         for (var i = 0; i < data.length; i++) {
-            // months are 0-11 in javascript
+            // months are 0-11 in javascript, calendar.json stores them as 1-12
+            // so we subtract 1 (-1) from the data in calendar.json
             // we want todays events to also be in the "future events" category
             // so we add 1 day to it to make sure it's added.
-            // console.log(data[i].year);
-            // console.log(data[i].month-1);
-            // console.log(data[i].day+1);
             var eventDate = new Date(data[i].year, data[i].month-1, data[i].day+1);
             if (eventDate.getTime() < today.getTime()) {
                 pastevents.push(data[i]);
@@ -44,6 +36,8 @@ function getEvents(res) {
     });
 }
 
+// Binary search for where an event should be placed
+// inside calendar.js
 function insertAt(events, newEventDate) {
     var minIndex = 0;
     var maxIndex = events.length-1;
@@ -84,7 +78,6 @@ function insertAt(events, newEventDate) {
 }
 
 function createEvent(req, res, callback) {
-    // req.body.ocassion
     var ocassion = req.body.occasion;
     var invitedCount = req.body.invitedCount;
     var date = new Date(req.body.eventDate);
@@ -103,7 +96,7 @@ function createEvent(req, res, callback) {
     };
     readEvents(function(err, data){
         if(err) {
-            console.log(err);
+            res.send(err);
         }
         var events = data; 
         // insert the new event in order to 
@@ -146,20 +139,19 @@ function deleteEvent(req, res, callback) {
 
 module.exports = function (app) {
     // api ---------------------------------------------------------------------
-    // get all todos
+    // get all events
     app.get('/api/events', function (req, res) {
-        // use mongoose to get all todos in the database
         getEvents(res);
     });
 
-    // create todo and send back all todos after creation
+    // create event and send back all events after creation
     app.post('/api/events', function (req, res) {
         createEvent(req, res, function(req, res){
            getEvents(res); 
         });
     });
 
-    // // delete a todo
+    // delete an event
     app.delete('/api/events/:occasion', function (req, res) {
         deleteEvent(req, res, function(req, res){
             getEvents(res);
@@ -168,6 +160,6 @@ module.exports = function (app) {
 
     // application -------------------------------------------------------------
     app.get('*', function (req, res) {
-        res.sendFile(__dirname + '/public/index.html'); // load the single view file (angular will handle the page changes on the front-end)
+        res.sendFile(__dirname + '/public/index.html');
     });
 };
