@@ -71,9 +71,13 @@ function insertAt(events, newEventDate) {
             currentIndex = parseInt((minIndex + maxIndex)/2);
             currentElement = events[currentIndex]; 
         } else {
-            return currentIndex;
+            // Since the currentElements time is before the new event
+            // and the next events time is after the new event
+            // we want to insert the new event right in between
+            return currentIndex+1;
         }
     }
+    console.log("here3");
     return currentIndex;
 }
 

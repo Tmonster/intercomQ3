@@ -24,4 +24,6 @@ There's a lot of room for improvement on this app. I'm still new to node and ang
 2. Better error handling would go along with the validation of the inputs. Callback functions still rack my brain a bit, so I need to get better at using those.
 3. Better structure on how the events are displayed. It's not too bad right now with only future events being shown, but I think it should be easier to see events closer to the current date.
 4. Separate CSS and HTML in index.html and remove any inline style rules from HTML elements
-5. Make the web-page more mobile-friendly?
+5. Implement a better read write function. Right now all events are being read and written when a new event is created/deleted.
+6. Make the web-page more mobile-friendly?
+
