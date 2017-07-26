@@ -12,82 +12,10 @@
 	<!-- SCROLLS -->
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"><!-- load bootstrap -->
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
-	<style>
-		html 					{ overflow-y:scroll; }
-		body 					{ padding-top:50px; }
-		#todo-list { 
-			margin-bottom:30px;
-			text-align: center;
-		}
-		#todo-form { 
-			margin-bottom:50px; 
-		}
-		#todo-add {
-			width:100%;
-		}
-		.square {
-			width: 250px;
-			height: 250px;
-			overflow-y: scroll;
-			border-style: solid;
-			border-color: aqua;
-			border-width: 3px;
-			border-radius: 20px;
-			display: inline-block;
-			margin: 20px;
-		}
-		#todo-list input[type="checkbox"] {
-			float: none;
-		}
-		.calendar{
-			margin: auto;
-			text-align: center;
-			display: flex;
-			flex-wrap: wrap;
-		}
-		.text-center {
-			text-align: center;
-			background: #c5c4c4;
-			width: 80%;
-			margin: 5px auto;
-			border-radius: 20px;
-			padding: 0px 5px;
-		}
-		.newEvent {
-			text-align: center;
-			width: 80%;
-			margin: 5px auto;
-			padding: 0px 5px;
-		}
-		.jumbotron.min {
-			width: 65%;
-			margin: auto 10px;
-		}
-		.heading {
-			display: flex;
-			min-width: 700px;
-		}
-		.form-group.square {
-			margin: auto 10px;
-			text-align: center;
-		}
-		.form-group.square input[type="date"]{
-			width:155px;
-		}
-		.square-bottom{
-			margin-top: 10px;
-		}
-		.square.no-border {
-			border-style: none;
-		}
-		#showEvents {
-			margin-top: 90px;
-		}
-	</style>
-
+	<link rel="stylesheet" href="styles.css">
 	<!-- SPELLS -->
-	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script><!-- load angular -->
-
+	<!-- load angular -->
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
 	
 	<script src="js/core.js"></script> <!-- load our main application -->
 	<script src="js/controllers/main.js"></script> <!-- load up our controller -->
@@ -98,7 +26,7 @@
 	<div class="container">
 		<div class="heading">
 			<div class="jumbotron min">
-					<h1 style="display: flex;"><span class="label label-info" style="margin: auto 5px">{{ displayedEvents }}</span> Calendar Events!</h1>
+					<h1><span class="label label-info">{{ displayedEvents }}</span> Calendar Events!</h1>
 			</div>
 			<div class="form-group square">
 				<form>
@@ -108,9 +36,9 @@
 					<br>
 					date: <input type="date" class="newEvent" placeholder="Event Date" ng-model="formData.eventDate">
 					<br>
-					<div style="width:100%; margin-right: 5px">
-						<p style="display: inline">Event Cancelled? 
-						<input type="checkbox" name="cancelled" class="newEvent" ng-model="formData.cancelled" value="true" style="width: inherit;"></p>
+					<div class="event-cancelled">
+						<p>Event Cancelled? 
+						<input type="checkbox" name="cancelled" class="newEvent" ng-model="formData.cancelled" value="true"></p>
 					 	
 					</div>
 					<br>
@@ -125,7 +53,7 @@
 				</form>
 			</div>
 			<div class="square past-events" ng-repeat="event in pastevents" 
-			style="display: {{pastEventDisplay}}">
+			ng-show="allDatesShown">
 				<p class="text-center">occasion: {{event.occasion}}</p>
 				<p class="text-center">invited: {{event.invited_count}}</p>
 				<p class="text-center">Date: {{event.month}}/{{event.day}}/{{event.year}}</p>

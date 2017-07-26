@@ -1,0 +1,110 @@
+html{ 
+	overflow-y:scroll;
+}
+		
+body {
+    padding-top:50px;
+}
+
+#todo-list { 
+	margin-bottom:30px;
+	text-align: center;
+}
+
+#todo-form { 
+	margin-bottom:50px; 
+}
+
+#todo-add {
+	width:100%;
+}
+
+.square {
+	width: 250px;
+	height: 250px;
+	overflow-y: scroll;
+	border-style: solid;
+	border-color: aqua;
+	border-width: 3px;
+	border-radius: 20px;
+	display: inline-block;
+	margin: 20px;
+}
+
+#todo-list input[type="checkbox"] {
+	float: none;
+}
+
+.calendar{
+	margin: auto;
+	text-align: center;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.text-center {
+	text-align: center;
+	background: #c5c4c4;
+	width: 80%;
+	margin: 5px auto;
+	border-radius: 20px;
+	padding: 0px 5px;
+}
+.newEvent {
+	text-align: center;
+	width: 80%;
+	margin: 5px auto;
+	padding: 0px 5px;
+}
+
+.event-cancelled {
+	width:100%; 
+	margin-right: 5px;
+}
+
+.event-cancelled p {
+	display: inline;
+}
+
+.event-cancelled input[type="checkbox"] {
+	width: inherit;
+}
+
+.jumbotron.min {
+	width: 65%;
+	margin: auto 10px;
+}
+
+.jumbotron.min h1{
+	display: flex;
+}
+
+.jumbotron.min span {
+	margin: auto 5px;
+}
+
+.heading {
+	display: flex;
+	min-width: 700px;
+}
+
+.form-group.square {
+	margin: auto 10px;
+	text-align: center;
+}
+
+.form-group.square input[type="date"]{
+	width:155px;
+}
+
+.square-bottom{
+	margin-top: 10px;
+}
+
+.square.no-border {
+	border-style: none;
+}
+
+#showEvents {
+	margin-top: 90px;
+}

@@ -50,12 +50,10 @@ angular.module('eventController', [])
 
 		$scope.showPastEvents = function() {
 			if (!$scope.allDatesShown) {
-				$scope.pastEventDisplay = 'inline-block';
 				document.getElementById('showEvents').innerHTML = "Show only future Events";
 				$scope.displayedEvents = $scope.events.length + $scope.pastevents.length;
 				$scope.allDatesShown = true;
 			} else {
-				$scope.pastEventDisplay = 'none';
 				document.getElementById('showEvents').innerHTML = "Show Previous Events";
 				$scope.displayedEvents = $scope.events.length;
 				$scope.allDatesShown = false;
